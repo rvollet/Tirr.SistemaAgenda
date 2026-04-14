@@ -1,0 +1,64 @@
+/* =========================
+   BACKGROUNDS
+========================= */
+
+.bg-primary {
+    background-color: var(--color-primary) !important;
+}
+
+.bg-white {
+    background-color: var(--color-white) !important;
+}
+
+.bg-gray-light {
+    background-color: var(--color-gray-light) !important;
+}
+
+.bg-gray-lighter {
+    background-color: var(--color-gray-lighter) !important;
+}
+
+.bg-default {
+    background-color: var(--bg-color) !important;
+}
+
+.bg-gray-medium {
+    background-color: var(--color-gray-medium) !important;
+}
+
+
+/* =========================
+   TEXT COLORS
+========================= */
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-white {
+    color: var(--color-white);
+}
+
+.text-gray-light {
+    color: var(--color-gray-light);
+}
+
+.text-gray-lighter {
+    color: var(--color-gray-lighter);
+}
+
+.text-dark {
+    color: var(--color-text-dark);
+}
+
+.text-gray-medium {
+    color: var(--color-gray-medium);
+}
+
+.text-default {
+    color: var(--default-text-color);
+}
+
+.text-4a4a3d {
+    color: #4a4a3d;
+}

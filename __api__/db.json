@@ -1,0 +1,86 @@
+{
+  "services": [
+    {
+      "id": "3f1c2d7e-9b6a-4c8d-8a2a-1c9f5e7b3d11",
+      "name": "Full Hair Dye",
+      "description": "coloring + hydration",
+      "price": 45,
+      "image": "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "a12d4c6e-7b8f-4d91-9c3a-2e5f6a7b8c90",
+      "name": "Root Touch-up",
+      "description": "hydration + washing",
+      "price": 45,
+      "image": "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "b91c2a3d-4e5f-6a78-9b0c-1d2e3f4a5b6c",
+      "name": "Fantasy Coloring",
+      "description": "washing + hydration",
+      "price": 45,
+      "image": "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "c1d2e3f4-a5b6-4789-9c0d-1e2f3a4b5c6d",
+      "name": "Hair Cut Basic",
+      "description": "cut + styling",
+      "price": 30,
+      "image": "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "d2e3f4a5-b6c7-4890-8d1e-2f3a4b5c6d7e",
+      "name": "Hair Cut Premium",
+      "description": "cut + wash + styling",
+      "price": 55,
+      "image": "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "e3f4a5b6-c7d8-4901-9e2f-3a4b5c6d7e8f",
+      "name": "Deep Hydration",
+      "description": "hydration treatment",
+      "price": 40,
+      "image": "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "f4a5b6c7-d8e9-4012-af30-4b5c6d7e8f90",
+      "name": "Keratin Treatment",
+      "description": "repair + smoothing",
+      "price": 120,
+      "image": "https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "1a2b3c4d-5e6f-4789-8a9b-0c1d2e3f4a5b",
+      "name": "Scalp Detox",
+      "description": "cleaning + exfoliation",
+      "price": 35,
+      "image": "https://images.unsplash.com/photo-1619451334792-150fd785ee74?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "2b3c4d5e-6f70-489a-9b0c-1d2e3f4a5b6c",
+      "name": "Blow Dry",
+      "description": "washing + brushing",
+      "price": 25,
+      "image": "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=400&h=400&fit=crop"
+    },
+    {
+      "id": "3c4d5e6f-7081-49ab-8c1d-2e3f4a5b6c7d",
+      "name": "Braids Style",
+      "description": "styling braids",
+      "price": 60,
+      "image": "https://images.unsplash.com/photo-1520975916090-3105956dac38?w=400&h=400&fit=crop"
+    }
+  ],
+  "appointments": [
+    {
+      "chosenServiceId": "3f1c2d7e-9b6a-4c8d-8a2a-1c9f5e7b3d11",
+      "chosenDay": "2026-04-15T00:00:00.000Z",
+      "chosenHour": "17:00",
+      "name": "teste teste",
+      "email": "ronald.vollet@drogal.com.br",
+      "phone": "19971254742",
+      "id": "j17qLL9yLRk"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
