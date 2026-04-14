@@ -8,7 +8,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "api:start": "json-server __api__/db.json"
+    "api:start": "json-server __api__/db.json",
+    "docker:deploy": "bash docker/deploy.sh",
+    "docker:server": "bash docker/server.sh",
+    "docker:save": "bash docker/save.sh"
   },
   "dependencies": {
     "add": "^2.0.6",
