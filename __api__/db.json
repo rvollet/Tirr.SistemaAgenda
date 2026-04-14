@@ -80,6 +80,15 @@
       "email": "ronald.vollet@drogal.com.br",
       "phone": "19971254742",
       "id": "j17qLL9yLRk"
+    },
+    {
+      "chosenServiceId": "3c4d5e6f-7081-49ab-8c1d-2e3f4a5b6c7d",
+      "chosenDay": "2026-04-16T00:00:00.000Z",
+      "chosenHour": "13:00",
+      "name": "Ronald",
+      "email": "ronald.vollet@gmail.com",
+      "phone": "19971254742",
+      "id": "qAzJuPemPKA"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
