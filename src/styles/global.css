@@ -22,6 +22,7 @@
     --bs-body-bg: var(--bg-color);
 
     --bs-white: #ffffff;
+    --bs-gray-light: #f8f8f8;
     --bs-secondary: var(--color-gray-light);
     --bs-light: var(--color-gray-lighter);
     --bs-dark: var(--color-text-dark);
@@ -119,4 +120,46 @@ html {
     height: 65px;
     position: sticky;
     background-color: white;
+    z-index: 1;
+}
+
+.tirr__header__content-item {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    transition: 0.3    
+}
+
+.tirr__page__img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+
+.tirr__calendar-time-page__calendar-container {
+    max-width: 440px;
+}
+
+.tirr__calendar-time-page__calendar-item {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tirr__validaditon-page__info-container {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tirr__validaditon-page__info-item {
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 }

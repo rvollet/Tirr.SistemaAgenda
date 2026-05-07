@@ -5,8 +5,8 @@
 const MailIcon = (props: React.SVGProps<SVGSVGElement>) => {
     return (
         <svg
-            width={19}
-            height={15}
+            width={23}
+            height={25}
             viewBox="0 0 19 15"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -29,8 +29,8 @@ const MailIcon = (props: React.SVGProps<SVGSVGElement>) => {
 const CalendarIcon = (props: React.SVGProps<SVGSVGElement>) => {
     return (
         <svg
-            width={17}
-            height={19}
+            width={23}
+            height={25}
             viewBox="0 0 17 19"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -129,6 +129,7 @@ const CarretRightIcon = (props: React.SVGProps<SVGSVGElement>) => {
             viewBox="0 0 7 11"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            style={{ transform: 'rotate(180deg)'}}
             {...props}
         >
             <path
@@ -172,8 +173,8 @@ const CheckIcon = (props: React.SVGProps<SVGSVGElement>) => {
 const PhoneIcon = (props: React.SVGProps<SVGSVGElement>) => {
     return (
         <svg
-            width={18}
-            height={18}
+            width={23}
+            height={25}
             viewBox="0 0 18 18"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -190,9 +191,33 @@ const PhoneIcon = (props: React.SVGProps<SVGSVGElement>) => {
     )
 }
 
+/**
+ * @description Ícone de usuário (avatar) utilizado para perfis ou identificação.
+ */
+const UserIcon = (props: React.SVGProps<SVGSVGElement>) => {
+    return (
+        <svg
+            width={23}
+            height={25}
+            viewBox="0 0 18 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            {...props}
+        >
+            <path
+                d="M15.5 15.5C15.5 13.2909 12.5899 11.5 9 11.5C5.41015 11.5 2.5 13.2909 2.5 15.5M12.5 5.5C12.5 7.433 10.933 9 9 9C7.067 9 5.5 7.433 5.5 5.5C5.5 3.567 7.067 2 9 2C10.933 2 12.5 3.567 12.5 5.5Z"
+                stroke="#4A4A3D"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
+};
+
 export {
     CalendarIcon, CarretLeftIcon,
     CarretRightIcon,
-    CheckIcon, MailIcon, MoonIcon, PhoneIcon, SunIcon
+    CheckIcon, MailIcon, MoonIcon, PhoneIcon, SunIcon, UserIcon
 }
 

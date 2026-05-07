@@ -116,7 +116,8 @@ export namespace ScheduleModel {
    */
   export type Input = {
     chosenService: ServiceModel
-    chosenDay: Date
+    chosenDay: number
+    chosenMonth: string
     chosenHour: string
     name: string
     email: string

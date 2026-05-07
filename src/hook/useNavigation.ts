@@ -77,6 +77,8 @@ const useScheduleNavigation = () => {
     }
   };
 
+  const numberPage = ScheduleFlow.indexOf(currentPage)
+
   return {
     /**
      * Página atual do fluxo
@@ -107,6 +109,11 @@ const useScheduleNavigation = () => {
      * Indica se está na última etapa
      */
     isLastPage: currentPage === ScheduleFlow[ScheduleFlow.length - 1],
+
+    /**
+     * Indica o número da página
+     */
+    numberPage
   };
 };
 

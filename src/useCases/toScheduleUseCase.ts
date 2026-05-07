@@ -18,7 +18,12 @@ export interface ToScheduleUseCaseArgs {
    * REGRA:
    * Não pode ser uma data no passado.
    */
-  chosenDay: Date;
+  chosenDay: number;
+
+  /**
+   * Mês selecionado para o agendamento.
+   */
+  chosenMonth: String;
 
   /**
    * Hora selecionada para o agendamento.

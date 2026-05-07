@@ -1,5 +1,6 @@
 import useScheduleNavigation from "@/hook/useNavigation";
 import usePromise from "@/hook/usePromise";
+import type { CategoryModel } from "@/model/CategoryModel";
 import type { ServiceModel } from "@/model/ServiceModel";
 import useGlobalContext from "@/store";
 import loadServiceUseCase from "@/useCases/loadServiceUseCase";
@@ -23,17 +24,17 @@ import { useEffect, useState } from "react";
  * - Avançar para próxima etapa do fluxo
  */
 const ChoiceServicePage = () => {
-  const { updateSchedule } = useGlobalContext();
+  const { schedule, updateSchedule } = useGlobalContext();
   const { next } = useScheduleNavigation();
 
   const {
-    result: services,
+    result: categories,
     execute: loadServices,
     isLoading: serviceIsLoading,
-  } = usePromise(loadServiceUseCase, []);
+  } = usePromise<CategoryModel[]>(loadServiceUseCase, []);
 
   const [selectedService, setSelectedService] =
-    useState<ServiceModel | null>(null);
+    useState<ServiceModel | null>(schedule.chosenService || null);
 
   /**
    * Carrega serviços ao montar a página
@@ -61,53 +62,57 @@ const ChoiceServicePage = () => {
   };
 
   return (
-    <div className="container py-5">
-      {/* HEADER */}
-      <div className="mb-4">
-        <h2 className="fw-bold">Escolha o serviço</h2>
-        <p className="text-muted">
-          Selecione o tipo de serviço que deseja agendar.
-        </p>
-      </div>
-
+    <div className="container py-5 px-3">
       {/* LOADING */}
       {serviceIsLoading && (
         <div className="alert alert-info">Carregando serviços...</div>
       )}
 
       {/* LISTA DE SERVIÇOS */}
-      <div className="row g-3">
-        {services?.map((service) => {
-          const isSelected = selectedService?.id === service.id;
+      {categories?.map((category) => (
+        <div key={category.title} className="mb-4">
+          
+          {/* TÍTULO DA CATEGORIA */}
+          <h6 className="text-muted mb-2">{category.title}</h6>
 
-          return (
-            <div className="col-12 col-md-4" key={service.id}>
-              <div
-                onClick={() => handleSelectService(service)}
-                className={`border rounded-4 p-3 h-100 cursor-pointer transition ${
-                  isSelected ? "border-primary shadow-sm" : ""
-                }`}
-                style={{ cursor: "pointer" }}
-              >
-                {/* IMAGEM */}
-                <img
-                  src={service.image}
-                  alt={service.name}
-                  className="img-fluid rounded mb-3"
-                />
+          <div className="row g-2">
+            {category.services?.map((service) => {
+              const isSelected = selectedService?.id === service.id;
 
-                {/* INFO */}
-                <h5 className="fw-semibold">{service.name}</h5>
-                <p className="text-muted small">{service.description}</p>
-
-                <div className="fw-bold text-primary">
-                  {service.priceFormatted}
+              return (
+                <div className="col-12 col-md-6 col-lg-4" key={service.id}>
+                  <div
+                    onClick={() => handleSelectService(service)}
+                    className={`bg-white rounded-4 d-flex flex-inline align-items-center text-center justify-content-between p-3 h-100 cursor-pointer transition ${
+                      isSelected ? "border-primary shadow-sm border" : ""
+                    }`}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <div className="d-flex align-items-center flex-grow-1 gap-2">
+                      {/* IMAGEM */}
+                      <img
+                        src={service.image}
+                        alt={service.name}
+                        className="tirr__page__img rounded-circle"
+                      />
+                      
+                      <div className="d-flex flex-column align-items-start">
+                        <h5 className="fw-bold font-size-17">{service.name}</h5>
+                        <p className="text-muted small">{service.description}</p>
+                      </div>
+                    </div>
+                    
+                    {/* INFO */}
+                    <div className="fw-bold text-primary">
+                      {service.priceFormatted}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
 
       {/* FOOTER ACTION */}
       <div className="mt-4 d-flex justify-content-end">

@@ -1,3 +1,7 @@
+import { steps } from "@/constants/steps";
+import useScheduleNavigation from "@/hook/useNavigation";
+import { CheckIcon } from "../icons";
+
 /**
  * Componente de Header do fluxo de agendamento.
  *
@@ -15,9 +19,42 @@
  * - Melhorar a navegação e orientação do usuário
  */
 const Header = () => {
+  const { numberPage } = useScheduleNavigation();
+
+  const pageActual = numberPage + 1;
+
   return (
-    <div className="tirr__header shadow-sm">
-      
+    <div className="tirr__header shadow-sm ">
+      <div className="d-flex align-items-center gap-2 h-100 px-4">
+        {steps.map((step) => {
+          const stepCompleted = pageActual > step.id;
+          const stepActual = pageActual === step.id;
+          return (
+            <div key={step.id} className={`d-flex align-items-center ${stepActual ? "flex-grow-1" : ""}`}>
+              <div
+                className={` tirr__header__content-item rounded-circle d-flex align-items-center justify-content-center  ${
+                  stepActual || stepCompleted 
+                    ? "bg-warning text-white border-0"
+                    : "bg-white text-muted border"
+                }`}
+              >
+                {stepCompleted ? <CheckIcon /> : step.id}
+              </div>
+              {stepActual && (
+                <span className="ms-2 fw-semibold text-dark small text-nowrap animate-fade-in">
+                  {step.label}
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div className="progress" style={{ height: "4px"}}>
+        <div
+          className="progress-bar bg-warning" 
+          style={{ width: `${(pageActual / steps.length) * 100}%`}}
+        ></div>
+      </div>
     </div>
   )
 }

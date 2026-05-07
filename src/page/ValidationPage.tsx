@@ -1,6 +1,7 @@
 import { ScheduleRoutes } from "@/config";
 import useScheduleNavigation from "@/hook/useNavigation";
 import usePromise from "@/hook/usePromise";
+import { CalendarIcon, MailIcon, PhoneIcon, UserIcon } from "@/shared/icons";
 import useGlobalContext from "@/store";
 import toScheduleUseCase, { type ToScheduleUseCaseArgs } from "@/useCases/toScheduleUseCase";
 
@@ -40,13 +41,14 @@ const ValidationPage = () => {
      * =====================================================
      */
     const hasService = !!schedule.chosenService?.id;
-    const hasDate = schedule.chosenDay instanceof Date;
+    const hasDate = typeof schedule.chosenDay === "number" && schedule.chosenDay > 0;
+    const hasMonth = typeof schedule.chosenMonth === "string" && schedule.chosenMonth.trim().length > 0;
     const hasHour = typeof schedule.chosenHour === "string" && schedule.chosenHour.trim().length > 0;
     const hasName = typeof schedule.name === "string" && schedule.name.trim().length > 0;
     const hasEmail = typeof schedule.email === "string" && schedule.email.trim().length > 0;
     const hasPhone = typeof schedule.phone === "string" && schedule.phone.trim().length >= 10;
 
-    if (!hasService || !hasDate || !hasHour || !hasName || !hasEmail || !hasPhone) {
+    if (!hasService || !hasDate || !hasMonth || !hasHour || !hasName || !hasEmail || !hasPhone) {
       alert("Preencha todos os campos corretamente antes de agendar.");
       return;
     }
@@ -56,6 +58,7 @@ const ValidationPage = () => {
      */
     const data: ToScheduleUseCaseArgs = {
       chosenDay: schedule.chosenDay!,
+      chosenMonth: schedule.chosenMonth!,
       chosenHour: schedule.chosenHour!,
       chosenService: schedule.chosenService!,
       email: schedule.email!,
@@ -88,53 +91,78 @@ const ValidationPage = () => {
   }
 
   return (
-    <div className="container py-4">
-
-      {/* ================= HEADER ================= */}
-      <div className="mb-4">
-        <h2 className="fw-bold">Confirmar agendamento</h2>
-        <p className="text-muted">
-          Revise os dados antes de finalizar
-        </p>
-      </div>
-
+    <div className="container py-5 px-3">
       {/* ================= SUMMARY ================= */}
-      <div className="bg-white border rounded-4 p-4 mb-4">
-
-        {/* SERVICE */}
-        <div className="mb-3">
-          <h6 className="fw-bold">Serviço</h6>
-          <p className="mb-0">{schedule?.chosenService?.name}</p>
-          <small className="text-muted">
-            {schedule.chosenService?.description}
-          </small>
-        </div>
+      <div className="border-0 rounded-4 p-1 mb-4 d-flex flex-column gap-4">
 
         {/* DATE & TIME */}
-        <div className="mb-3">
-          <h6 className="fw-bold">Data e horário</h6>
-          <p className="mb-0">
-            {schedule.chosenDay?.toLocaleDateString()} às {schedule.chosenHour}
-          </p>
+        <div className="tirr__validaditon-page__info-container">
+          <p>Dia escolhido</p>
+          <div className="tirr__validaditon-page__info-item">
+            <CalendarIcon />
+            <div>
+              <p className="fw-semibold">Data selecionada</p>
+              <p className="mb-0 font-size-13">
+                {schedule.chosenDay} de {schedule.chosenMonth} às {schedule.chosenHour}H
+              </p>
+            </div>
+          </div>
+          
         </div>
 
         {/* CLIENT */}
-        <div className="mb-3">
-          <h6 className="fw-bold">Cliente</h6>
-          <p className="mb-0">{schedule.name}</p>
-          <small className="text-muted">{schedule.email}</small>
-          <br />
-          <small className="text-muted">{schedule.phone}</small>
+        <div className="tirr__validaditon-page__info-container">
+          <p>Seus dados</p>
+          <div className="tirr__validaditon-page__info-item">
+            <UserIcon />
+            <div>
+              <p className="fw-semibold">Seu nome</p>
+              <p className="mb-0 font-size-13">
+                {schedule.name}
+              </p>
+            </div>
+          </div>
+          <div className="tirr__validaditon-page__info-item">
+            <MailIcon />
+            <div>
+              <p className="fw-semibold">Seu Email</p>
+              <p className="mb-0 font-size-13">
+                {schedule.email}
+              </p>
+            </div>
+          </div>
+          <div className="tirr__validaditon-page__info-item">
+            <PhoneIcon />
+            <div>
+              <p className="fw-semibold">Seu Telefone</p>
+              <p className="mb-0 font-size-13">
+                {schedule.phone}
+              </p>
+            </div>
+          </div>
+          {/* <p className="mb-0">
+            {schedule.chosenDay?.toLocaleDateString()} às {schedule.chosenHour}
+          </p> */}
         </div>
 
-        {/* PRICE */}
-        <div>
-          <h6 className="fw-bold">Valor</h6>
-          <p className="mb-0">
-            {schedule?.chosenService?.priceFormatted}
-          </p>
+        {/* SERVIÇO */}
+        <div className="tirr__validaditon-page__info-container">
+          <p>Serviço escolhido</p>
+          <div className="tirr__validaditon-page__info-item">
+            <div className="d-flex align-items-center flex-grow-1 gap-2">
+               <img
+                className="tirr__page__img rounded-circle bg-gray-light"
+              />
+              <div>
+                <p className="fw-semibold">{schedule?.chosenService?.name}</p>
+                <p className="mb-0 font-size-13">
+                  {schedule.chosenService?.description}
+                </p>
+              </div>
+            </div>
+            <p className="fw-bold text-primary">{schedule?.chosenService?.priceFormatted}</p>
+          </div>
         </div>
-
       </div>
 
       {/* ================= ACTIONS ================= */}

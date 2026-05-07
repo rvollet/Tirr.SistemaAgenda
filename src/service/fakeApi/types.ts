@@ -1,39 +1,42 @@
+
 /**
- * DTO responsável por representar a resposta de um serviço.
- *
- * Geralmente utilizado para retornar informações de serviços como
- * corte, coloração ou tratamentos em um sistema de salão.
+ * DTO: Representa a categoria que agrupa os serviços.
+ * Representa o nó principal da resposta da API.
+ * Agrupa serviços por categorias (ex: Corte, Coloração).
  */
-export interface GetServiceResponseDto {
-  /**
-   * Identificador único do serviço.
-   * Normalmente um UUID gerado pelo backend.
-   */
-  id: string
+export interface GetCategoryResponseDto {
+  title: string;
+  services: {
+    /**
+     * Identificador único do serviço.
+     * Normalmente um UUID gerado pelo backend.
+     */
+    id: string
 
-  /**
-   * Imagem representando o serviço
-   */
-  image:string,
+    /**
+     * Imagem representando o serviço
+     */
+    image:string,
 
-  /**
-   * Nome do serviço.
-   * Ex: "Full Hair Dye", "Root Touch-up"
-   */
-  name: string
+    /**
+     * Nome do serviço.
+     * Ex: "Full Hair Dye", "Root Touch-up"
+     */
+    name: string
 
-  /**
-   * Descrição detalhada do serviço.
-   * Ex: "coloring + hydration", "cut + styling"
-   */
-  description: string
+    /**
+     * Descrição detalhada do serviço.
+     * Ex: "coloring + hydration", "cut + styling"
+     */
+    description: string
 
-  /**
-   * Preço do serviço.
-   * Valor numérico representando o custo do serviço.
-   * Ex: 45, 120, 250
-   */
-  price: number
+    /**
+     * Preço do serviço.
+     * Valor numérico representando o custo do serviço.
+     * Ex: 45, 120, 250
+     */
+    price: number
+  }[];
 }
 
 /**

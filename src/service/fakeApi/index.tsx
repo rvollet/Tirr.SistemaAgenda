@@ -11,7 +11,7 @@
  * - Padronização de acesso à API
  */
 const ROUTES = {
-    SERVICES: "/services",
+    CATEGORIES: "/categories",
     APPOINTMENTS: "/appointments"
 } as const;
 
@@ -29,7 +29,7 @@ const ROUTES = {
  */
 import axios, { type AxiosInstance } from "axios";
 import { authUtils } from "../../utils/auth";
-import type { GetServiceResponseDto, PostToScheduleDto } from "./types";
+import type { GetCategoryResponseDto, PostToScheduleDto } from "./types";
 
 const api: AxiosInstance = axios.create({
     baseURL: "http://localhost:3000/",
@@ -96,15 +96,16 @@ export const FAKE_API_CONNECTOR = {
      * =====================================================
      * GET SERVICES
      * =====================================================
-     * @description Busca a lista de serviços disponíveis na API.
+     * @description Busca a lista de categorias e seus respectivos 
+     * serviços agrupados na API..
      *
-     * @returns Promise contendo um array de serviços (GetServiceResponseDto[])
+     * @returns Promise contendo um array de categorias (GetCategoryResponseDto[])
      * @throws Error quando a requisição falhar
      */
-    getServices: async (): Promise<GetServiceResponseDto[]> => {
+    getServices: async (): Promise<GetCategoryResponseDto[]> => {
         try {
-            const response = await api.get<GetServiceResponseDto[]>(
-                ROUTES.SERVICES,
+            const response = await api.get<GetCategoryResponseDto[]>(
+                ROUTES.CATEGORIES,
                 {
                     headers: DEFAULT_HEADERS,
                 }
