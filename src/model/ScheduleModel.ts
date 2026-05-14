@@ -1,45 +1,64 @@
-import { ServiceModel } from "./ServiceModel"
+import { ServiceModel } from "./ServiceModel";
 
 export class ScheduleModel {
+
   /**
    * Serviço selecionado pelo usuário.
    */
-  public chosenService: ServiceModel
+  chosenService: ServiceModel;
 
   /**
    * Dia selecionado para o agendamento.
-   *
-   * REGRA:
-   * Não pode ser uma data no passado.
    */
-  public chosenDay: Date
+  chosenDay: number;
+
+  /**
+   * Ano selecionado para o agendamento.
+   */
+  chosenYear: number;
+
+  /**
+   * Mês selecionado para o agendamento.
+   *
+   * FORMATO:
+   * 0 = Janeiro
+   * 11 = Dezembro
+   */
+  chosenMonth: number;
 
   /**
    * Hora selecionada para o agendamento.
    *
-   * Formato esperado: "HH:mm" (ex: "14:30")
+   * FORMATO:
+   * HH:mm
+   *
+   * Exemplo:
+   * 09:30
+   * 14:00
    */
-  public chosenHour: string
+  chosenHour: string;
 
   /**
-   * Nome do cliente.
+   * Nome completo do cliente.
    */
-  public name: string
+  name: string;
 
   /**
    * Email do cliente.
    */
-  public email: string
+  email: string;
 
   /**
    * Telefone do cliente.
    */
-  public phone: string
+  phone: string;
 
   constructor(data: ScheduleModel.Input) {
     this.chosenService = data.chosenService
     this.chosenDay = data.chosenDay
     this.chosenHour = data.chosenHour
+    this.chosenMonth = data.chosenMonth
+    this.chosenYear = data.chosenYear
     this.name = data.name
     this.email = data.email
     this.phone = data.phone
@@ -48,8 +67,22 @@ export class ScheduleModel {
   }
 
   /**
-   * Validação reativa do model.
-   * Pode ser chamada após qualquer alteração.
+   * Retorna a data completa do agendamento.
+   */
+  public getDate(): Date {
+    const [hours, minutes] = this.chosenHour.split(":").map(Number)
+
+    return new Date(
+      this.chosenYear,
+      this.chosenMonth,
+      this.chosenDay,
+      hours,
+      minutes
+    )
+  }
+
+  /**
+   * Verifica se o model está válido.
    */
   public isValid(): boolean {
     return (
@@ -57,68 +90,181 @@ export class ScheduleModel {
       this.hasValidName() &&
       this.hasValidEmail() &&
       this.hasValidPhone() &&
-      this.hasValidDateTime()
+      this.hasValidDay() &&
+      this.hasValidMonth() &&
+      this.hasValidYear() &&
+      this.hasValidHour() &&
+      this.hasFutureDate()
     )
   }
 
   /**
-   * Garante que o estado atual é válido.
+   * Garante que o model esteja válido.
    */
   public assertValid(): void {
-    if (!this.isValid()) {
-      throw new Error("ScheduleModel inválido")
+
+    if (!this.hasValidService()) {
+      throw new Error("Serviço inválido")
+    }
+
+    if (!this.hasValidName()) {
+      throw new Error("Nome inválido")
+    }
+
+    if (!this.hasValidEmail()) {
+      throw new Error("Email inválido")
+    }
+
+    if (!this.hasValidPhone()) {
+      throw new Error("Telefone inválido")
+    }
+
+    if (!this.hasValidDay()) {
+      throw new Error("Dia inválido")
+    }
+
+    if (!this.hasValidMonth()) {
+      throw new Error("Mês inválido")
+    }
+
+    if (!this.hasValidYear()) {
+      throw new Error("Ano inválido")
+    }
+
+    if (!this.hasValidHour()) {
+      throw new Error("Horário inválido")
+    }
+
+    if (!this.hasFutureDate()) {
+      throw new Error("A data do agendamento deve ser futura")
     }
   }
 
-  // -------------------------
+  // ---------------------------------------------------
   // VALIDADORES
-  // -------------------------
+  // ---------------------------------------------------
 
+  /**
+   * Valida o serviço.
+   */
   private hasValidService(): boolean {
-    return this.chosenService instanceof ServiceModel && this.chosenService.isValid()
+    return (
+      this.chosenService instanceof ServiceModel &&
+      this.chosenService.isValid()
+    )
   }
 
+  /**
+   * Nome:
+   * - obrigatório
+   * - mínimo 3 caracteres
+   */
   private hasValidName(): boolean {
-    return typeof this.name === "string" && this.name.trim().length > 0
+    return (
+      typeof this.name === "string" &&
+      this.name.trim().length >= 3
+    )
   }
 
+  /**
+   * Email válido.
+   */
   private hasValidEmail(): boolean {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email)
   }
 
+  /**
+   * Telefone:
+   * - mínimo 10 dígitos
+   * - máximo 11 dígitos
+   */
   private hasValidPhone(): boolean {
-    return typeof this.phone === "string" && this.phone.replace(/\D/g, "").length >= 10
+
+    const digits = this.phone.replace(/\D/g, "")
+
+    return digits.length >= 10 && digits.length <= 11
   }
 
   /**
-   * REGRA PRINCIPAL:
-   * A data + hora escolhida NÃO pode ser menor que a data/hora atual.
+   * Dia válido.
    */
-  private hasValidDateTime(): boolean {
-    if (!(this.chosenDay instanceof Date)) return false
+  private hasValidDay(): boolean {
+    return (
+      Number.isInteger(this.chosenDay) &&
+      this.chosenDay >= 1 &&
+      this.chosenDay <= 31
+    )
+  }
 
-    const [hours, minutes] = this.chosenHour.split(":").map(Number)
+  /**
+   * Mês válido.
+   */
+  private hasValidMonth(): boolean {
+    return (
+      Number.isInteger(this.chosenMonth) &&
+      this.chosenMonth >= 0 &&
+      this.chosenMonth <= 11
+    )
+  }
 
-    if (isNaN(hours) || isNaN(minutes)) return false
+  /**
+   * Ano válido.
+   */
+  private hasValidYear(): boolean {
 
-    const selectedDateTime = new Date(this.chosenDay)
-    selectedDateTime.setHours(hours, minutes, 0, 0)
+    const currentYear = new Date().getFullYear()
 
-    const now = new Date()
+    return (
+      Number.isInteger(this.chosenYear) &&
+      this.chosenYear >= currentYear
+    )
+  }
 
-    return selectedDateTime >= now
+  /**
+   * Hora válida no formato HH:mm.
+   */
+  private hasValidHour(): boolean {
+
+    if (!/^([01]\d|2[0-3]):([0-5]\d)$/.test(this.chosenHour)) {
+      return false
+    }
+
+    const [hours, minutes] = this.chosenHour
+      .split(":")
+      .map(Number)
+
+    return (
+      hours >= 0 &&
+      hours <= 23 &&
+      minutes >= 0 &&
+      minutes <= 59
+    )
+  }
+
+  /**
+   * A data do agendamento
+   * precisa ser futura.
+   */
+  private hasFutureDate(): boolean {
+
+    const date = this.getDate()
+
+    return date.getTime() > Date.now()
   }
 }
 
 export namespace ScheduleModel {
+
   /**
-   * Estrutura de entrada do agendamento.
+   * Estrutura de entrada
+   * para criação do agendamento.
    */
   export type Input = {
     chosenService: ServiceModel
     chosenDay: number
-    chosenMonth: string
+    chosenMonth: number
     chosenHour: string
+    chosenYear: number
     name: string
     email: string
     phone: string

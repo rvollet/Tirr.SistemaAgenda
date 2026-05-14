@@ -41,14 +41,14 @@ const ValidationPage = () => {
      * =====================================================
      */
     const hasService = !!schedule.chosenService?.id;
-    const hasDate = typeof schedule.chosenDay === "number" && schedule.chosenDay > 0;
-    const hasMonth = typeof schedule.chosenMonth === "string" && schedule.chosenMonth.trim().length > 0;
+    const hasDay = typeof schedule.chosenDay === "number" && schedule.chosenDay > 0;
+    const hasMonth = typeof schedule.chosenMonth === "number" && schedule.chosenMonth > 0;
     const hasHour = typeof schedule.chosenHour === "string" && schedule.chosenHour.trim().length > 0;
     const hasName = typeof schedule.name === "string" && schedule.name.trim().length > 0;
     const hasEmail = typeof schedule.email === "string" && schedule.email.trim().length > 0;
     const hasPhone = typeof schedule.phone === "string" && schedule.phone.trim().length >= 10;
-
-    if (!hasService || !hasDate || !hasMonth || !hasHour || !hasName || !hasEmail || !hasPhone) {
+    
+    if (!hasService || !hasDay || !hasMonth || !hasHour || !hasName || !hasEmail || !hasPhone) {
       alert("Preencha todos os campos corretamente antes de agendar.");
       return;
     }
@@ -58,6 +58,7 @@ const ValidationPage = () => {
      */
     const data: ToScheduleUseCaseArgs = {
       chosenDay: schedule.chosenDay!,
+      chosenYear: schedule.chosenYear!,
       chosenMonth: schedule.chosenMonth!,
       chosenHour: schedule.chosenHour!,
       chosenService: schedule.chosenService!,
@@ -67,7 +68,6 @@ const ValidationPage = () => {
     };
 
     try {
-      console.log("Payload agendamento:", data);
 
       await toSchedule(data);
 

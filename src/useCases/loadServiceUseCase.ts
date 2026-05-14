@@ -1,66 +1,176 @@
 import type { CategoryModel } from "@/model/CategoryModel";
 import { ServiceModel } from "@/model/ServiceModel";
-import { FAKE_API_CONNECTOR } from "@/service/fakeApi";
-import type { GetCategoryResponseDto } from "@/service/fakeApi/types";
+
+import { API_AGENDA } from "@/service/AgendaApi";
+
+import type {
+  GetFuncionariosResponseDto,
+  GetServicoResponseDto,
+  GetServicoResponseDto__Result
+} from "@/service/AgendaApi/types";
 
 /**
  * =========================================================
  * LOAD SERVICES USE CASE
  * =========================================================
- * @description Caso de uso responsável por buscar as categorias 
- * de serviços na API e converter a estrutura hierárquica para 
- * Models de domínio (CategoryModel e ServiceModel).
+ * @description
+ * Caso de uso responsável por:
  *
- * Responsabilidades:
- * - Orquestrar chamada à API de categorias
- * - Mapear DTOs de categorias para CategoryModels
- * - Instanciar ServiceModels para cada serviço dentro das categorias
- * - Garantir a validação e consistência da árvore de dados
+ * - Buscar funcionários disponíveis
+ * - Buscar serviços do primeiro funcionário encontrado
+ * - Agrupar serviços por categoria
+ * - Converter DTOs da API em Models de domínio
  *
- * Camada:
- * - Application Layer (Use Case)
+ * Fluxo:
+ * 1. Recupera funcionários
+ * 2. Seleciona primeiro funcionário
+ * 3. Busca serviços vinculados ao funcionário
+ * 4. Agrupa serviços por código da categoria
+ * 5. Converte dados para CategoryModel + ServiceModel
+ *
+ * Retorno:
+ * - Lista de categorias contendo serviços agrupados.
  */
 const loadServiceUseCase = async (): Promise<CategoryModel[]> => {
-  /**
-   * =====================================================
-   * FETCH RAW DATA
-   * =====================================================
-   * @description Busca os dados "brutos" da API (DTO).
-   */
-  const bruteCategories: GetCategoryResponseDto[] =
-    await FAKE_API_CONNECTOR.getServices();
 
   /**
    * =====================================================
-   * MAPPING DTO -> DOMAIN MODEL
+   * FUNCIONÁRIOS
    * =====================================================
-   * @description Converte os dados da API para o modelo de domínio
-   * (ServiceModel), garantindo validação interna.
    */
-  const categories: CategoryModel[] = bruteCategories.map((cat: any) => {
+  const funcionarios: GetFuncionariosResponseDto | null =
+    await API_AGENDA.getFuncionarios();
+
+  /**
+   * =====================================================
+   * VALIDAÇÃO FUNCIONÁRIOS
+   * =====================================================
+   */
+  if (!funcionarios?.result?.length) {
+    return [];
+  }
+
+  /**
+   * =====================================================
+   * FUNCIONÁRIO SELECIONADO
+   * =====================================================
+   */
+  const funcionarioSelecionado = funcionarios.result[0];
+
+  /**
+   * =====================================================
+   * SERVIÇOS
+   * =====================================================
+   */
+  const servicosResponse: GetServicoResponseDto | null =
+    await API_AGENDA.getServicos(
+      funcionarioSelecionado.id
+    );
+
+  /**
+   * =====================================================
+   * VALIDAÇÃO SERVIÇOS
+   * =====================================================
+   */
+  if (!servicosResponse?.result?.length) {
+    return [];
+  }
+
+  /**
+   * =====================================================
+   * AGRUPAMENTO POR CATEGORIA
+   * =====================================================
+   * @description
+   * Organiza os serviços utilizando o código da categoria
+   * como chave principal.
+   *
+   * Estrutura:
+   * {
+   *   [categoriaCodigo]: {
+   *     id: string
+   *     title: string
+   *     services: ServicoDto[]
+   *   }
+   * }
+   */
+  const servicesByCategory = servicosResponse.result.reduce(
+    (
+      accumulator: Record<
+        string,
+        {
+          id: string;
+          title: string;
+          services: GetServicoResponseDto__Result[];
+        }
+      >,
+      service: GetServicoResponseDto__Result
+    ) => {
+
+      const categoryCode = String(service.codigoCategoria);
+
+      if (!accumulator[categoryCode]) {
+
+        accumulator[categoryCode] = {
+          id: categoryCode,
+          title: service.nomeCategoria,
+          services: []
+        };
+
+      }
+
+      accumulator[categoryCode].services.push(service);
+
+      return accumulator;
+
+    },
+    {}
+  );
+
+  /**
+   * =====================================================
+   * DTO -> DOMAIN MODEL
+   * =====================================================
+   */
+  const categories: CategoryModel[] = Object.values(
+    servicesByCategory
+  ).map((category) => {
+
     return {
-      title: cat.title,
-      services: cat.services.map((service: any) => {
+
+      id: category.id,
+
+      title: category.title,
+
+      services: category.services.map((service) => {
+
         return new ServiceModel({
-          id: service.id,
-          image: service.image,
-          name: service.name,
-          description: service.description,
-          price: service.price,
+
+          id: service.id.toString(),
+
+          image:
+            "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400&h=400&fit=crop",
+
+          name: service.nome,
+
+          description: service.descricao ?? "...",
+
+          price: service.valor
+
         });
+
       })
+
     };
+
   });
 
-  return categories;
-
   /**
    * =====================================================
-   * RETURN DOMAIN DATA
+   * RETURN
    * =====================================================
-   * @description Retorna lista de models já validados e consistentes.
    */
   return categories;
+
 };
 
 export default loadServiceUseCase;

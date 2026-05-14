@@ -32,7 +32,7 @@ const ChoiceServicePage = () => {
     execute: loadServices,
     isLoading: serviceIsLoading,
   } = usePromise<CategoryModel[]>(loadServiceUseCase, []);
-
+  
   const [selectedService, setSelectedService] =
     useState<ServiceModel | null>(schedule.chosenService || null);
 

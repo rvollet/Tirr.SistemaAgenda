@@ -1,16 +1,24 @@
 import { ScheduleModel } from "@/model/ScheduleModel";
 import type { ServiceModel } from "@/model/ServiceModel";
-import { FAKE_API_CONNECTOR } from "@/service/fakeApi";
+import { API_AGENDA } from "@/service/AgendaApi";
 
 export interface ToScheduleUseCaseArgs {
-  
+
   /**
-   * Serviço selecionado pelo usuário.
+    * Serviço selecionado pelo usuário.
+    *
+    * REGRA:
+    * Deve ser uma instância válida de ServiceModel.
+    */
+  chosenService: ServiceModel;
+
+  /**
+   * Ano selecionado para o agendamento.
    *
    * REGRA:
-   * Deve ser uma instância válida de ServiceModel.
+   * Não pode ser uma data no passado.
    */
-  chosenService: ServiceModel;
+  chosenYear: number;
 
   /**
    * Dia selecionado para o agendamento.
@@ -23,7 +31,7 @@ export interface ToScheduleUseCaseArgs {
   /**
    * Mês selecionado para o agendamento.
    */
-  chosenMonth: String;
+  chosenMonth: number;
 
   /**
    * Hora selecionada para o agendamento.
@@ -79,9 +87,7 @@ export interface ToScheduleUseCaseArgs {
  * Retorno:
  * true em caso de sucesso
  */
-const toScheduleUseCase = async (
-  input: ToScheduleUseCaseArgs
-): Promise<boolean> => {
+const toScheduleUseCase = async (input: ToScheduleUseCaseArgs): Promise<boolean> => {
   try {
     /**
      * =====================================================
@@ -93,6 +99,8 @@ const toScheduleUseCase = async (
       chosenService: input.chosenService,
       chosenDay: input.chosenDay,
       chosenHour: input.chosenHour,
+      chosenMonth: input.chosenMonth,
+      chosenYear: input.chosenYear,
       name: input.name,
       email: input.email,
       phone: input.phone,
@@ -110,16 +118,26 @@ const toScheduleUseCase = async (
      * 3. Persistência via Service Layer
      * =====================================================
      */
-    await FAKE_API_CONNECTOR.postAppointment({
-      chosenServiceId: schedule.chosenService.id,
-      chosenDay: schedule.chosenDay,
-      chosenHour: schedule.chosenHour,
-      name: schedule.name,
-      email: schedule.email,
-      phone: schedule.phone,
-    });
+    const [hours, minutes] = schedule.chosenHour.split(":")
+
+    const dataAgendamento = new Date(
+      schedule.chosenYear,
+      schedule.chosenMonth,
+      schedule.chosenDay,
+      Number(hours),
+      Number(minutes)
+    ).toISOString()
+    debugger
+    await API_AGENDA.criarAgendamento({
+      servico: parseInt(schedule.chosenService.id),
+      funcionario: 1,
+      nomeCliente: schedule.name,
+      contato: schedule.phone,
+      dataAgendamento
+    })
 
     return true;
+    
   } catch (error) {
     console.error("Erro no use case de agendamento:", error);
     return false;
