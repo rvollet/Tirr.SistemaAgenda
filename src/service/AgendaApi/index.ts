@@ -28,7 +28,7 @@ import type {
  * Cliente HTTP base utilizado por todos os serviços da Agenda.
  */
 export const api: AxiosInstance = axios.create({
-    baseURL: "http://localhost:5045/",
+    baseURL: "http://192.168.15.2:8080/",
     // baseURL: "https://sua-api.com.br/",
     timeout: 60000,
 });
