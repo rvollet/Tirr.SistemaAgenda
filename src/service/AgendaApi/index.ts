@@ -28,7 +28,7 @@ import type {
  * Cliente HTTP base utilizado por todos os serviços da Agenda.
  */
 export const api: AxiosInstance = axios.create({
-    baseURL: "http://192.168.15.2:8080/",
+    baseURL: "http://agenda-backendapiagendamento-lz548l-8a58ac-187-77-2-83.sslip.io/",
     // baseURL: "https://sua-api.com.br/",
     timeout: 60000,
 });
