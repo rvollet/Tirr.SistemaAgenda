@@ -1,25 +1,20 @@
-server {
-    listen       80;
-    listen       [::]:80;
-    server_name  localhost;
+FROM node:24-alpine AS build
 
-    root   /usr/share/nginx/html;
-    index  index.html;
+WORKDIR /app
 
-    location / {
-        try_files $uri /index.html;
-    }
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-    error_page   500 502 503 504  /50x.html;
-    
-    location = /50x.html {
+COPY . .
+RUN yarn build
 
-        root   /usr/share/nginx/html;
+FROM nginx:stable-alpine
 
-        #Disable caching with HTTP headers
-        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0";
-        add_header Pragma "no-cache";
-        add_header Expires 0;
-        
-    }
-}
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
